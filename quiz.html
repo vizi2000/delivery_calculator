@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Wiedzy - Xpress Delivery</title>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,500,700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #ffcc00;
+            --secondary-color: #000000;
+            --text-color: #333333;
+            --light-gray: #f5f5f5;
+            --border-color: #eeeeee;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Roboto', sans-serif;
+            color: var(--text-color);
+            line-height: 1.6;
+            background-color: #ffffff;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        header {
+            background-color: var(--secondary-color);
+            color: #ffffff;
+            padding: 20px 0;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            max-width: 200px;
+        }
+        
+        .back-link {
+            color: #ffffff;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+        }
+        
+        .back-link:hover {
+            color: var(--primary-color);
+        }
+        
+        .quiz-container {
+            padding: 40px 0;
+        }
+        
+        .quiz-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .quiz-header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        
+        .quiz-header p {
+            font-size: 16px;
+            color: #666666;
+        }
+        
+        .quiz-progress {
+            margin-bottom: 30px;
+        }
+        
+        .progress-bar {
+            height: 10px;
+            background-color: var(--light-gray);
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background-color: var(--primary-color);
+            width: 0%;
+            transition: width 0.3s;
+        }
+        
+        .progress-text {
+            text-align: right;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+        
+        .quiz-question {
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .question-text {
+            font-size: 18px;
+            font-weight: 500;
+            margin-bottom: 20px;
+        }
+        
+        .options {
+            list-style: none;
+        }
+        
+        .option {
+            padding: 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .option:hover {
+            background-color: var(--light-gray);
+        }
+        
+        .option.selected {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            color: var(--secondary-color);
+            font-weight: 500;
+        }
+        
+        .quiz-navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            background-color: var(--primary-color);
+            color: var(--secondary-color);
+            text-decoration: none;
+            font-weight: 500;
+            border-radius: 4px;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .btn:hover {
+            background-color: #e6b800;
+        }
+        
+        .btn-secondary {
+            background-color: var(--light-gray);
+            color: var(--text-color);
+        }
+        
+        .btn-secondary:hover {
+            background-color: #e6e6e6;
+        }
+        
+        .btn:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+        
+        .quiz-result {
+            text-align: center;
+            padding: 40px 0;
+        }
+        
+        .result-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+        }
+        
+        .result-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        
+        .result-score {
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+        
+        .certificate {
+            background-color: #ffffff;
+            border: 2px solid var(--primary-color);
+            border-radius: 8px;
+            padding: 30px;
+            margin: 30px auto;
+            max-width: 500px;
+            text-align: center;
+        }
+        
+        .certificate-header {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: var(--secondary-color);
+        }
+        
+        .certificate-text {
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+        
+        .certificate-name {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: var(--secondary-color);
+        }
+        
+        .certificate-date {
+            font-size: 14px;
+            color: #666666;
+        }
+        
+        .certificate-seal {
+            width: 100px;
+            height: 100px;
+            background-color: var(--primary-color);
+            border-radius: 50%;
+            margin: 20px auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 36px;
+            color: var(--secondary-color);
+            font-weight: 700;
+        }
+        
+        .feedback {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: var(--light-gray);
+            border-radius: 8px;
+        }
+        
+        .feedback h3 {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+        
+        .feedback ul {
+            padding-left: 20px;
+        }
+        
+        .feedback li {
+            margin-bottom: 5px;
+        }
+        
+        footer {
+            background-color: var(--secondary-color);
+            color: #ffffff;
+            padding: 20px 0;
+            text-align: center;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .quiz-header h1 {
+                font-size: 24px;
+            }
+            
+            .question-text {
+                font-size: 16px;
+            }
+            
+            .option {
+                padding: 12px;
+            }
+            
+            .btn {
+                padding: 10px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <img src="logo.png" alt="Xpress Delivery" class="logo">
+                <a href="strefa_kierowcy.html" class="back-link">← Powrót do Strefy Kierowcy</a>
+            </div>
+        </div>
+    </header>
+    
+    <div class="container">
+        <div class="quiz-container" id="quiz-start">
+            <div class="quiz-header">
+                <h1>Quiz Wiedzy Kierowcy Xpress Delivery</h1>
+                <p>Sprawdź swoją wiedzę i zdobądź certyfikat kierowcy Xpress Delivery</p>
+            </div>
+            
+            <div class="quiz-question">
+                <p>Witaj <span id="user-email"></span>!</p>
+                <p>Ten quiz składa się z 10 pytań jednokrotnego wyboru i sprawdza Twoją wiedzę na temat procedur i najlepszych praktyk w realizacji dostaw natychmiastowych w Xpress Delivery.</p>
+                <p>Aby zdobyć certyfikat, musisz udzielić poprawnych odpowiedzi na co najmniej 80% pytań.</p>
+                <p>Powodzenia!</p>
+            </div>
+            
+            <div class="quiz-navigation">
+                <button id="start-quiz" class="btn">Rozpocznij quiz</button>
+            </div>
+        </div>
+        
+        <div class="quiz-container" id="quiz-questions" style="display: none;">
+            <div class="quiz-header">
+                <h1>Quiz Wiedzy Kierowcy Xpress Delivery</h1>
+                <p>Pytanie <span id="current-question">1</span> z <span id="total-questions">10</span></p>
+            </div>
+            
+            <div class="quiz-progress">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progress-fill"></div>
+                </div>
+                <div class="progress-text"><span id="progress-percent">0%</span> ukończone</div>
+            </div>
+            
+            <div class="quiz-question">
+                <div class="question-text" id="question-text">Pytanie będzie tutaj</div>
+                <ul class="options" id="options-list">
+                    <!-- Options will be inserted here by JavaScript -->
+                </ul>
+            </div>
+            
+            <div class="quiz-navigation">
+                <button id="prev-question" class="btn btn-secondary">Poprzednie</button>
+                <button id="next-question" class="btn" disabled>Następne</button>
+            </div>
+        </div>
+        
+        <div class="quiz-container" id="quiz-result" style="display: none;">
+            <div class="quiz-result">
+                <div class="result-icon" id="result-icon">🏆</div>
+                <div class="result-title" id="result-title">Gratulacje!</div>
+                <div class="result-score">Twój wynik: <span id="score">8/10</span> (<span id="score-percent">80%</span>)</div>
+                
+                <div id="certificate-container" style="display: none;">
+                    <p>Zdobyłeś certyfikat kierowcy Xpress Delivery!</p>
+                    
+                    <div class="certificate">
+                        <div class="certificate-header">Certyfikat Kierowcy Xpress Delivery</div>
+                        <div class="certificate-seal">XD</div>
+                        <div class="certificate-text">Niniejszym zaświadcza się, że</div>
+                        <div class="certificate-name" id="certificate-name">Imię i Nazwisko</div>
+                        <div class="certificate-text">pomyślnie ukończył quiz wiedzy i posiada niezbędne kwalifikacje do realizacji dostaw natychmiastowych w Xpress Delivery</div>
+                        <div class="certificate-date" id="certificate-date">Data: 08.04.2025</div>
+                    </div>
+                    
+                    <p>Certyfikat został również wysłany na Twój adres email.</p>
+                </div>
+                
+                <div id="feedback-container" style="display: none;">
+                    <p>Niestety, nie udało Ci się zdobyć certyfikatu. Przejrzyj poniższe zagadnienia i spróbuj ponownie.</p>
+                    
+                    <div class="feedback">
+                        <h3>Obszary wymagające poprawy:</h3>
+                        <ul id="feedback-list">
+                            <!-- Feedback will be inserted here by JavaScript -->
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="quiz-navigation">
+                    <a href="strefa_kierowcy.html" class="btn btn-secondary">Powrót do Strefy Kierowcy</a>
+                    <button id="retry-quiz" class="btn">Spróbuj ponownie</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Xpress Delivery. Wszystkie prawa zastrzeżone.</p>
+        </div>
+    </footer>
+    
+    <script>
+        // Get email from URL parameter
+        const urlParams = new URLSearchParams(window.location.search);
+        const userEmail = urlParams.get('email') || 'kierowca@example.com';
+        
+        // Display user email
+        document.getElementById('user-email').textContent = userEmail;
+        
+        // Quiz questions
+        const quizQuestions = [
+            {
+                question: "Jaki jest minimalny czas oczekiwania pod adresem dostawy, gdy klienta nie ma na miejscu?",
+                options: ["5 minut", "10 minut", "15 minut", "Nie trzeba czekać"],
+                correctAnswer: 1, // 10 minut
+                category: "Procedury dostawy"
+            },
+            {
+                question: "Co należy zrobić po dotarciu do punktu odbioru przesyłki?",
+                options: [
+                    "Od razu odebrać przesyłkę",
+                    "Zadzwonić do klienta",
+                    "Nacisnąć przycisk 'Dotarłem do punktu odbioru' w aplikacji",
+                    "Wysłać SMS do supportu"
+                ],
+                correctAnswer: 2, // Nacisnąć przycisk 'Dotarłem do punktu odbioru' w aplikacji
+                category: "Procedury odbioru"
+            },
+            {
+                question: "Kiedy wynagrodzenie za zlecenia jest wypłacane?",
+                options: [
+                    "Codziennie",
+                    "Co tydzień, w poniedziałki",
+                    "Co dwa tygodnie",
+                    "Na koniec miesiąca"
+                ],
+                correctAnswer: 1, // Co tydzień, w poniedziałki
+                category: "Wynagrodzenia"
+            },
+            {
+                question: "Co zrobić, gdy aplikacja się zawiesza podczas realizacji zlecenia?",
+                options: [
+                    "Anulować zlecenie",
+                    "Zrestartować aplikację lub telefon",
+                    "Zignorować problem i kontynuować dostawę",
+                    "Wyłączyć telefon na 10 minut"
+                ],
+                correctAnswer: 1, // Zrestartować aplikację lub telefon
+                category: "Problemy techniczne"
+            },
+            {
+                question: "W jakich godzinach pojawia się najwięcej zleceń?",
+                options: [
+                    "6:00-9:00 i 15:00-18:00",
+                    "9:00-12:00 i 21:00-24:00",
+                    "11:00-14:00 i 17:00-20:00",
+                    "Równomiernie przez cały dzień"
+                ],
+                correctAnswer: 2, // 11:00-14:00 i 17:00-20:00
+                category: "Optymalizacja pracy"
+            },
+            {
+                question: "Co należy zrobić, jeśli przesyłka jest uszkodzona przy odbiorze?",
+                options: [
+                    "Odebrać przesyłkę i dostarczyć ją klientowi",
+                    "Odmówić odbioru przesyłki",
+                    "Zrobić zdjęcie uszkodzenia, zgłosić problem w aplikacji i czekać na instrukcje",
+                    "Naprawić uszkodzenie samodzielnie"
+                ],
+                correctAnswer: 2, // Zrobić zdjęcie uszkodzenia, zgłosić problem w aplikacji i czekać na instrukcje
+                category: "Procedury odbioru"
+            },
+            {
+                question: "Jak długo trwa weryfikacja dokumentów po rejestracji?",
+                options: [
+                    "Do 1 godziny",
+                    "Do 24 godzin",
+                    "Do 3 dni roboczych",
+                    "Do 7 dni roboczych"
+                ],
+                correctAnswer: 1, // Do 24 godzin
+                category: "Rejestracja"
+            },
+            {
+                question: "Co zrobić, gdy klient zmienia adres dostawy podczas realizacji zlecenia?",
+                options: [
+                    "Odmówić zmiany adresu",
+                    "Dostarczyć pod nowy adres bez zgłaszania zmiany",
+                    "Anulować zlecenie",
+                    "Skontaktować się z supportem przez aplikację i czekać na instrukcje"
+                ],
+                correctAnswer: 3, // Skontaktować się z supportem przez aplikację i czekać na instrukcje
+                category: "Procedury dostawy"
+            },
+            {
+                question: "Jaki jest główny cel Xpress Delivery jako usługi?",
+                options: [
+                    "Dostawa tego samego dnia",
+                    "Dostawa natychmiastowa, alternatywa dla wyjścia do sklepu",
+                    "Dostawa jedzenia",
+                    "Dostawa przesyłek międzynarodowych"
+                ],
+                correctAnswer: 1, // Dostawa natychmiastowa, alternatywa dla wyjścia do sklepu
+                category: "Podstawy Xpress Delivery"
+            },
+            {
+                question: "Co zrobić, gdy nie możesz znaleźć adresu dostawy?",
+                options: [
+                    "Anulować zlecenie",
+                    "Użyć funkcji 'Zadzwoń do klienta' w aplikacji",
+                    "Zostawić przesyłkę w najbliższym punkcie odbioru",
+                    "Wrócić do punktu odbioru"
+                ],
+                correctAnswer: 1, // Użyć funkcji 'Zadzwoń do klienta' w aplikacji
+                category: "Procedury dostawy"
+            }
+        ];
+        
+        // Variables
+        let currentQuestion = 0;
+        const totalQuestions = quizQuestions.length;
+        let userAnswers = new Array(totalQuestions).fill(null);
+        
+        // DOM Elements
+        const quizStartSection = document.getElementById('quiz-start');
+        const quizQuestionsSection = document.getElementById('quiz-questions');
+        const quizResultSection = document.getElementById('quiz-result');
+        
+        const startQuizBtn = document.getElementById('start-quiz');
+        const prevQuestionBtn = document.getElementById('prev-question');
+        const nextQuestionBtn = document.getElementById('next-question');
+        const retryQuizBtn = document.getElementById('retry-quiz');
+        
+        const currentQuestionSpan = document.getElementById('current-question');
+        const totalQuestionsSpan = document.getElementById('total-questions');
+        const progressFill = document.getElementById('progress-fill');
+        const progressPercent = document.getElementById('progress-percent');
+        
+        const questionText = document.getElementById('question-text');
+        const optionsList = document.getElementById('options-list');
+        
+        const resultIcon = document.getElementById('result-icon');
+        const resultTitle = document.getElementById('result-title');
+        const scoreSpan = document.getElementById('score');
+        const scorePercentSpan = document.getElementById('score-percent');
+        
+        const certificateContainer = document.getElementById('certificate-container');
+        const feedbackContainer = document.getElementById('feedback-container');
+        const certificateName = document.getElementById('certificate-name');
+        const certificateDate = document.getElementById('certificate-date');
+        const feedbackList = document.getElementById('feedback-list');
+        
+        // Initialize
+        totalQuestionsSpan.textContent = totalQuestions;
+        
+        // Event Listeners
+        startQuizBtn.addEventListener('click', startQuiz);
+        prevQuestionBtn.addEventListener('click', showPreviousQuestion);
+        nextQuestionBtn.addEventListener('click', showNextQuestion);
+        retryQuizBtn.addEventListener('click', retryQuiz);
+        
+        // Functions
+        function startQuiz() {
+            quizStartSection.style.display = 'none';
+            quizQuestionsSection.style.display = 'block';
+            
+            // Reset user answers
+            userAnswers = new Array(totalQuestions).fill(null);
+            currentQuestion = 0;
+            
+            // Show first question
+            showQuestion(currentQuestion);
+        }
+        
+        function showQuestion(index) {
+            // Update question number
+            currentQuestionSpan.textContent = index + 1;
+            
+            // Update progress bar
+            const progress = ((index + 1) / totalQuestions) * 100;
+            progressFill.style.width = `${progress}%`;
+            progressPercent.textContent = `${Math.round(progress)}%`;
+            
+            // Update question text
+            questionText.textContent = quizQuestions[index].question;
+            
+            // Clear options
+            optionsList.innerHTML = '';
+            
+            // Add options
+            quizQuestions[index].options.forEach((option, i) => {
+                const li = document.createElement('li');
+                li.className = 'option';
+                li.textContent = option;
+                
+                // Check if this option is selected
+                if (userAnswers[index] === i) {
+                    li.classList.add('selected');
+                }
+                
+                // Add click event
+                li.addEventListener('click', () => {
+                    // Remove selected class from all options
+                    document.querySelectorAll('.option').forEach(opt => {
+                        opt.classList.remove('selected');
+                    });
+                    
+                    // Add selected class to clicked option
+                    li.classList.add('selected');
+                    
+                    // Save user answer
+                    userAnswers[index] = i;
+                    
+                    // Enable next button
+                    nextQuestionBtn.disabled = false;
+                });
+                
+                optionsList.appendChild(li);
+            });
+            
+            // Update button states
+            prevQuestionBtn.disabled = index === 0;
+            nextQuestionBtn.disabled = userAnswers[index] === null;
+            
+            // Change next button text on last question
+            if (index === totalQuestions - 1) {
+                nextQuestionBtn.textContent = 'Zakończ quiz';
+            } else {
+                nextQuestionBtn.textContent = 'Następne';
+            }
+        }
+        
+        function showPreviousQuestion() {
+            if (currentQuestion > 0) {
+                currentQuestion--;
+                showQuestion(currentQuestion);
+            }
+        }
+        
+        function showNextQuestion() {
+            if (currentQuestion < totalQuestions - 1) {
+                currentQuestion++;
+                showQuestion(currentQuestion);
+            } else {
+                // End of quiz
+                showResult();
+            }
+        }
+        
+        function showResult() {
+            quizQuestionsSection.style.display = 'none';
+            quizResultSection.style.display = 'block';
+            
+            // Calculate score
+            let correctAnswers = 0;
+            const incorrectCategories = [];
+            
+            userAnswers.forEach((answer, index) => {
+                if (answer === quizQuestions[index].correctAnswer) {
+                    correctAnswers++;
+                } else {
+                    // Add category to incorrect categories if not already there
+                    const category = quizQuestions[index].category;
+                    if (!incorrectCategories.includes(category)) {
+                        incorrectCategories.push(category);
+                    }
+                }
+            });
+            
+            const score = correctAnswers;
+            const scorePercent = Math.round((correctAnswers / totalQuestions) * 100);
+            
+            // Update score display
+            scoreSpan.textContent = `${score}/${totalQuestions}`;
+            scorePercentSpan.textContent = `${scorePercent}%`;
+            
+            // Check if passed (80% or higher)
+            const passed = scorePercent >= 80;
+            
+            if (passed) {
+                resultIcon.textContent = '🏆';
+                resultTitle.textContent = 'Gratulacje!';
+                certificateContainer.style.display = 'block';
+                feedbackContainer.style.display = 'none';
+                
+                // Update certificate
+                certificateName.textContent = userEmail.split('@')[0]; // Use email username as name
+                
+                // Set current date
+                const today = new Date();
+                const dateString = today.toLocaleDateString('pl-PL');
+                certificateDate.textContent = `Data: ${dateString}`;
+            } else {
+                resultIcon.textContent = '📚';
+                resultTitle.textContent = 'Spróbuj jeszcze raz!';
+                certificateContainer.style.display = 'none';
+                feedbackContainer.style.display = 'block';
+                
+                // Clear feedback list
+                feedbackList.innerHTML = '';
+                
+                // Add feedback for incorrect categories
+                incorrectCategories.forEach(category => {
+                    const li = document.createElement('li');
+                    li.textContent = category;
+                    feedbackList.appendChild(li);
+                });
+            }
+        }
+        
+        function retryQuiz() {
+            quizResultSection.style.display = 'none';
+            startQuiz();
+        }
+    </script>
+</body>
+</html>
